@@ -15,12 +15,15 @@ RUN npm run build --prefix client
 FROM node:20-alpine
 WORKDIR /app
 ENV NODE_ENV=production
+ENV PORT=10000
 
+# Copy root package.json and install production dependencies
 COPY package.json ./
-RUN npm install --omit=dev
+RUN npm install --omit=dev --no-audit --no-fund
 
+# Copy server code and build artifact from client
 COPY server ./server
 COPY --from=client-build /app/client/dist ./client/dist
 
-EXPOSE 4000
+EXPOSE 10000
 CMD ["node", "server/index.js"]
