@@ -1,0 +1,2 @@
+FROM mongo:6.0.14-jammy
+EXPOSE 27017

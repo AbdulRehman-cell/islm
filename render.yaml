@@ -4,23 +4,27 @@ services:
     name: islm-production-app
     runtime: docker
     dockerfilePath: Dockerfile
-    plan: free # Can be upgraded to starter/standard as needed
+    plan: free
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
       - key: JWT_SECRET
-        generateValue: true # Generates a secure random 256-bit key automatically
+        generateValue: true
       - key: MONGO_URI
-        fromDatabase:
-          name: islm-mongodb
-          property: connectionString
+        value: mongodb://islm-mongodb:27017/islm
       - key: CLIENT_URL
-        value: https://islm-production-app.onrender.com # Replace with your custom domain if available
+        value: https://islm-production-app.onrender.com
 
-databases:
-  # Native fully-managed Render MongoDB instance
-  - name: islm-mongodb
-    databaseName: islm
-    plan: free # Switch to starter/pro for production persistence guarantees
+  # Private Service: MongoDB instance with disk storage for persistence
+  - type: private
+    name: islm-mongodb
+    runtime: docker
+    dockerfilePath: Dockerfile
+    dockerContext: ./mongodb-render
+    plan: starter
+    disk:
+      name: mongodb-data
+      mountPath: /data/db
+      sizeGB: 1
