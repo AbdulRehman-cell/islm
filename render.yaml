@@ -1,0 +1,26 @@
+services:
+  # Web Service: Express Server hosting API & static frontend files
+  - type: web
+    name: islm-production-app
+    runtime: docker
+    dockerfilePath: Dockerfile
+    plan: free # Can be upgraded to starter/standard as needed
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true # Generates a secure random 256-bit key automatically
+      - key: MONGO_URI
+        fromDatabase:
+          name: islm-mongodb
+          property: connectionString
+      - key: CLIENT_URL
+        value: https://islm-production-app.onrender.com # Replace with your custom domain if available
+
+databases:
+  # Native fully-managed Render MongoDB instance
+  - name: islm-mongodb
+    databaseName: islm
+    plan: free # Switch to starter/pro for production persistence guarantees
