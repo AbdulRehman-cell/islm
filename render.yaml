@@ -17,12 +17,11 @@ services:
       - key: CLIENT_URL
         value: https://islm-production-app.onrender.com
 
-  # Private Service: MongoDB instance with disk storage for persistence
+  # Private Service: MongoDB instance using official Docker Image with persistent storage
   - type: private
     name: islm-mongodb
-    runtime: docker
-    dockerfilePath: Dockerfile
-    dockerContext: ./mongodb-render
+    runtime: image
+    image: mongo:6.0.14
     plan: starter
     disk:
       name: mongodb-data
